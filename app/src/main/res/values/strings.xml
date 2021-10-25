@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SplashScreenDemo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="home_fragment_title">This is Home Fragment</string>
+    <string name="dashboard_fragment_title">This is Dashboard Fragment</string>
+    <string name="notification_fragment_title">This is Notification Fragment</string>
+</resources>
