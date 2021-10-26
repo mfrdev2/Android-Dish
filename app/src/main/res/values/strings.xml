@@ -13,4 +13,7 @@
     <string name="Ibl_ingredients">Ingredients</string>
     <string name="Ibl_cooking_time_in_minutes">Cooking Time In Minutes</string>
     <string name="Ibl_direction_to_cook">Direction To Cook</string>
+    <string name="select_image_action">Select Image Action</string>
+    <string name="camera_text">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>
