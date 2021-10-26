@@ -10,6 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SplashScreenDemo">
         <activity
+            android:theme="@style/Theme.SplashScreenDemo.NoActionBar"
+            android:label="@string/Ibl_add_dish"
             android:name=".view.activities.AddActivity"
             android:exported="false" />
         <activity

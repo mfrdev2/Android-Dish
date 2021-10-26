@@ -4,4 +4,13 @@
     <string name="home_fragment_title">This is Home Fragment</string>
     <string name="dashboard_fragment_title">This is Dashboard Fragment</string>
     <string name="notification_fragment_title">This is Notification Fragment</string>
+
+    <string name="Ibl_add_dish">ADD DISH</string>
+    <string name="image_contentDescription">Image</string>
+    <string name="Ibl_title">Title</string>
+    <string name="Ibl_type">Type</string>
+    <string name="Ibl_category">Category</string>
+    <string name="Ibl_ingredients">Ingredients</string>
+    <string name="Ibl_cooking_time_in_minutes">Cooking Time In Minutes</string>
+    <string name="Ibl_direction_to_cook">Direction To Cook</string>
 </resources>
