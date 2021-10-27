@@ -10,9 +10,11 @@
         <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/layout/activity_second_acitivity.xml" value="0.25025641025641027" />
         <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/layout/activity_second_activity.xml" value="0.24351851851851852" />
         <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/layout/dialog_custom_add_image.xml" value="0.22685185185185186" />
+        <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/layout/dialog_custom_list.xml" value="0.25052083333333336" />
         <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/layout/fragment_dashboard.xml" value="0.25025641025641027" />
         <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/layout/fragment_home.xml" value="0.25025641025641027" />
         <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/layout/fragment_notification.xml" value="0.25025641025641027" />
+        <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/layout/item_custom_list.xml" value="0.2" />
         <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/menu/menu_item.xml" value="0.20925925925925926" />
         <entry key="..\:/AndroidWorkSpace/SplashScreenDemo/app/src/main/res/menu/menu_item_add.xml" value="0.25025641025641027" />
       </map>

@@ -1,12 +1,19 @@
 package com.frabbi.splashscreendemo.view.activities;
 
+import static com.frabbi.splashscreendemo.utils.ConstantValue.DishCategory;
+import static com.frabbi.splashscreendemo.utils.ConstantValue.DishCookingTime;
+import static com.frabbi.splashscreendemo.utils.ConstantValue.DishType;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -19,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -31,6 +39,9 @@ import com.bumptech.glide.request.target.Target;
 import com.frabbi.splashscreendemo.R;
 import com.frabbi.splashscreendemo.databinding.ActivityAddBinding;
 import com.frabbi.splashscreendemo.databinding.DialogCustomAddImageBinding;
+import com.frabbi.splashscreendemo.databinding.DialogCustomListBinding;
+import com.frabbi.splashscreendemo.utils.ConstantValue;
+import com.frabbi.splashscreendemo.view.adapters.CustomListItemAdapter;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -57,6 +68,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     private static final int GALLERY = 102;
     private static final String IMAGE_DIRECTORY = "MyDishData";
     private String imgPath;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +81,11 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
 
         //clickListener set in addImage view
         mBinding.ivAddDishImage.setOnClickListener(this);
+
+        mBinding.etType.setOnClickListener(this);
+        mBinding.etCategory.setOnClickListener(this);
+        mBinding.etCookingTimeInMinutes.setOnClickListener(this);
+        mBinding.addDishButton.setOnClickListener(this);
     }
 
     private void setupActionBar() {
@@ -88,12 +105,37 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     //clickListener set in addImage view implementation scope
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         if (v != null) {
             switch (v.getId()) {
                 case R.id.iv_add_dish_image:
                     pickImage();
+                    return;
+
+                case R.id.et_type:
+                    customItemListDialog(getResources().getString(R.string.title_select_dish_type),
+                            ConstantValue.dishType(),
+                            DishType.toString());
+                    Log.i("Type", "Working");
+
+                    return;
+                case R.id.et_category:
+                    customItemListDialog(getResources().getString(R.string.title_select_dish_category),
+                            ConstantValue.dishCategories(),
+                            DishCategory.toString());
+                    Log.i("Category", "Working");
+
+                    return;
+                case R.id.et_cooking_time_in_minutes:
+                    customItemListDialog(getResources().getString(R.string.title_select_dish_cooking_time),
+                            ConstantValue.dishCookTimes(),
+                            DishCookingTime.toString());
+                    Log.i("Cooking Time", "Working");
+                    return;
+                case R.id.add_dish_button:
+                    dataSaveTaskByAddDishButton();
                     return;
             }
         }
@@ -293,4 +335,86 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
         }
         return dir.getAbsolutePath();
     }//#END
+
+
+    //add popUp list Item on view
+    private void customItemListDialog(String title, List<String> itemList, String selection) {
+        DialogCustomListBinding dclBinding = DialogCustomListBinding.inflate(getLayoutInflater());
+        dialog = new Dialog(this);
+        dialog.setContentView(dclBinding.getRoot());
+
+        dclBinding.tvTitle.setText(title);
+        dclBinding.rvList.setLayoutManager(new LinearLayoutManager(this));
+        dclBinding.rvList.setAdapter(new CustomListItemAdapter(AddActivity.this, itemList, selection));
+        dialog.show();
+    }//#END
+
+    public void selectedItemInsertIntoInputField(String item, String selection) {
+        ConstantValue s = ConstantValue.valueOf(selection);
+        switch (s) {
+            case DishType:
+                mBinding.etType.setText(item);
+                dialog.dismiss();
+                return;
+            case DishCategory:
+                mBinding.etCategory.setText(item);
+                dialog.dismiss();
+                return;
+            case DishCookingTime:
+                mBinding.etCookingTimeInMinutes.setText(item);
+                dialog.dismiss();
+                return;
+        }
+    }//#END
+
+    private void dataSaveTaskByAddDishButton() {
+        String title = mBinding.etTitle.getText().toString().trim();
+        String type = mBinding.etType.getText().toString().trim();
+        String category = mBinding.etCategory.getText().toString().trim();
+        String ingredients = mBinding.etIngredients.getText().toString().trim();
+        String cookingTimeInMinutes = mBinding.etCookingTimeInMinutes.getText().toString().trim();
+        String cookingDirection = mBinding.etDirectionToCook.getText().toString().trim();
+
+        boolean inputStatus = true;
+
+        if (TextUtils.isEmpty(imgPath)) {
+            Toast.makeText(this, getResources().getString(R.string.err_msg_select_dish_image), Toast.LENGTH_SHORT).show();
+            inputStatus = false;
+            return;
+        }
+        if (TextUtils.isEmpty(title)) {
+            Toast.makeText(this, getResources().getString(R.string.err_msg_enter_dish_title), Toast.LENGTH_SHORT).show();
+            inputStatus = false;
+            return;
+        }
+        if (TextUtils.isEmpty(type)) {
+            Toast.makeText(this, getResources().getString(R.string.err_msg_select_dish_type), Toast.LENGTH_SHORT).show();
+            inputStatus = false;
+            return;
+        }
+        if (TextUtils.isEmpty(category)) {
+            Toast.makeText(this, getResources().getString(R.string.err_msg_select_dish_category), Toast.LENGTH_SHORT).show();
+            inputStatus = false;
+            return;
+        }
+        if (TextUtils.isEmpty(ingredients)) {
+            Toast.makeText(this, getResources().getString(R.string.err_msg_enter_dish_ingredients), Toast.LENGTH_SHORT).show();
+            inputStatus = false;
+            return;
+        }
+        if (TextUtils.isEmpty(cookingTimeInMinutes)) {
+            Toast.makeText(this, getResources().getString(R.string.err_msg_select_dish_cooking_time), Toast.LENGTH_SHORT).show();
+            inputStatus = false;
+            return;
+        }
+        if (TextUtils.isEmpty(cookingDirection)) {
+            Toast.makeText(this, getResources().getString(R.string.err_msg_enter_dish_instructions), Toast.LENGTH_SHORT).show();
+            inputStatus = false;
+            return;
+        }
+
+        if(inputStatus){
+            Toast.makeText(this,"All Entries are valid",Toast.LENGTH_SHORT).show();
+        }
+    }
 }
