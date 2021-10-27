@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.frabbi.splashscreendemo.R;
 import com.frabbi.splashscreendemo.databinding.ActivityAddBinding;
 import com.frabbi.splashscreendemo.databinding.DialogCustomAddImageBinding;
@@ -201,7 +202,13 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                 try {
                     assert data != null;
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    mBinding.ivDishImage.setImageBitmap(bitmap);
+                    // mBinding.ivDishImage.setImageBitmap(bitmap);
+
+                    Glide.with(this)
+                            .load(bitmap).
+                            centerCrop().
+                            into(mBinding.ivDishImage);
+
                     mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_edit_24));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -213,7 +220,13 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                 try {
                     assert data != null;
                     Uri uri = data.getData();
-                    mBinding.ivDishImage.setImageURI(uri);
+                   // mBinding.ivDishImage.setImageURI(uri);
+
+                    Glide.with(this)
+                            .load(uri).
+                            centerCrop().
+                            into(mBinding.ivDishImage);
+                    
                     mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_edit_24));
                 }catch (Exception e){
                     e.printStackTrace();
