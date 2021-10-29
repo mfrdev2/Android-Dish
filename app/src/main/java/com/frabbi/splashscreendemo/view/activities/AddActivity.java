@@ -1,5 +1,6 @@
 package com.frabbi.splashscreendemo.view.activities;
 
+import static com.frabbi.splashscreendemo.utils.ConstantValue.DISH_IMAGE_SOURCE_LOCAL;
 import static com.frabbi.splashscreendemo.utils.ConstantValue.DishCategory;
 import static com.frabbi.splashscreendemo.utils.ConstantValue.DishCookingTime;
 import static com.frabbi.splashscreendemo.utils.ConstantValue.DishType;
@@ -7,12 +8,15 @@ import static com.frabbi.splashscreendemo.utils.ConstantValue.DishType;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -37,11 +41,15 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.frabbi.splashscreendemo.R;
+import com.frabbi.splashscreendemo.applicaton.FavDishApplication;
 import com.frabbi.splashscreendemo.databinding.ActivityAddBinding;
 import com.frabbi.splashscreendemo.databinding.DialogCustomAddImageBinding;
 import com.frabbi.splashscreendemo.databinding.DialogCustomListBinding;
+import com.frabbi.splashscreendemo.model.entities.FavDish;
 import com.frabbi.splashscreendemo.utils.ConstantValue;
 import com.frabbi.splashscreendemo.view.adapters.CustomListItemAdapter;
+import com.frabbi.splashscreendemo.viewmodel.FavDishViewModel;
+import com.frabbi.splashscreendemo.viewmodel.FavDishViewModelFactory;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -70,14 +78,19 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     private String imgPath;
     private Dialog dialog;
 
+    private FavDishViewModel mFavDishViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = ActivityAddBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-
         //Setup toolbar to Actionbar
         setupActionBar();
+
+        FavDishViewModelFactory factory = new FavDishViewModelFactory(FavDishApplication.repository);
+        mFavDishViewModel = factory.create(FavDishViewModel.class);
+
 
         //clickListener set in addImage view
         mBinding.ivAddDishImage.setOnClickListener(this);
@@ -414,7 +427,24 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
         }
 
         if(inputStatus){
-            Toast.makeText(this,"All Entries are valid",Toast.LENGTH_SHORT).show();
+
+           FavDish favDish = new FavDish(
+                   imgPath,
+                   DISH_IMAGE_SOURCE_LOCAL.toString(),
+                   title,
+                   type,
+                   category,
+                   ingredients,
+                   cookingTimeInMinutes,
+                   cookingDirection,
+                   false
+                   );
+
+            mFavDishViewModel.insertFavDishDetails(favDish);
+            Toast.makeText(this,"You successfully added" +
+                    "your favorite dish details.",Toast.LENGTH_SHORT).show();
+            Log.i("Insertion","Success");
+            finish();
         }
     }
 }

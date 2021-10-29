@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum ConstantValue {
-    DishType,DishCategory,DishCookingTime;
+    DishType,DishCategory,DishCookingTime,
+
+    DISH_IMAGE_SOURCE_LOCAL,
+    DISH_IMAGE_SOURCE_ONLINE;
 
     public static List<String>  dishType(){
         List<String>  list = new ArrayList<>();

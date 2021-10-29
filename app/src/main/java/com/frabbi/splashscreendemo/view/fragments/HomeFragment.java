@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +18,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.frabbi.splashscreendemo.R;
+import com.frabbi.splashscreendemo.applicaton.FavDishApplication;
+import com.frabbi.splashscreendemo.model.entities.FavDish;
 import com.frabbi.splashscreendemo.view.activities.AddActivity;
+import com.frabbi.splashscreendemo.viewmodel.FavDishViewModel;
+import com.frabbi.splashscreendemo.viewmodel.FavDishViewModelFactory;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +37,8 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private FavDishViewModel favDishViewModel;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -64,6 +75,26 @@ public class HomeFragment extends Fragment {
         }
         //Here enabled OptionMenuOperation
         setHasOptionsMenu(true);
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FavDishViewModelFactory factory = new FavDishViewModelFactory(FavDishApplication.repository);
+        favDishViewModel = factory.create(FavDishViewModel.class);
+
+        favDishViewModel.getListData().observe(requireActivity(), new Observer<List<FavDish>>() {
+            @Override
+            public void onChanged(List<FavDish> favDishes) {
+                if(favDishes != null){
+                    for (FavDish obj : favDishes){
+                        Log.i("Check Data","Title# "+obj.title+"  Type#  "+obj.type);
+                    }
+                }
+            }
+        });
     }
 
     @Override
