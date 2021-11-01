@@ -7,6 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +22,10 @@ import android.widget.Toast;
 
 import com.frabbi.splashscreendemo.R;
 import com.frabbi.splashscreendemo.applicaton.FavDishApplication;
+import com.frabbi.splashscreendemo.databinding.FragmentHomeBinding;
 import com.frabbi.splashscreendemo.model.entities.FavDish;
 import com.frabbi.splashscreendemo.view.activities.AddActivity;
+import com.frabbi.splashscreendemo.view.adapters.FavDishesAdapter;
 import com.frabbi.splashscreendemo.viewmodel.FavDishViewModel;
 import com.frabbi.splashscreendemo.viewmodel.FavDishViewModelFactory;
 
@@ -39,6 +44,8 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private FavDishViewModel favDishViewModel;
+    private FragmentHomeBinding mBinding;
+    private FavDishesAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -73,6 +80,7 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
         //Here enabled OptionMenuOperation
         setHasOptionsMenu(true);
 
@@ -85,23 +93,37 @@ public class HomeFragment extends Fragment {
         FavDishViewModelFactory factory = new FavDishViewModelFactory(FavDishApplication.repository);
         favDishViewModel = factory.create(FavDishViewModel.class);
 
+
+        mBinding.rvDishesList.setLayoutManager(new GridLayoutManager(requireContext(),2));
+
+        mAdapter  = new FavDishesAdapter(HomeFragment.this);
         favDishViewModel.getListData().observe(requireActivity(), new Observer<List<FavDish>>() {
             @Override
             public void onChanged(List<FavDish> favDishes) {
                 if(favDishes != null){
-                    for (FavDish obj : favDishes){
-                        Log.i("Check Data","Title# "+obj.title+"  Type#  "+obj.type);
+                    if(!favDishes.isEmpty()){
+                        mBinding.rvDishesList.setVisibility(View.VISIBLE);
+                        mBinding.tvNoDishesAddedYet.setVisibility(View.GONE);
+                        mAdapter.setDishesList(favDishes);
+                    }else {
+                        mBinding.rvDishesList.setVisibility(View.GONE);
+                        mBinding.tvNoDishesAddedYet.setVisibility(View.VISIBLE);
                     }
                 }
+
             }
         });
+
+        mBinding.rvDishesList.setAdapter(mAdapter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        mBinding = FragmentHomeBinding.inflate(inflater,container,false);
+
+        return mBinding.getRoot();
     }
 
     //Here created optionMenuItem.
@@ -116,7 +138,6 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.addMenuItemId:
-                Toast.makeText(requireContext(),"Click on menuItem",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(requireActivity(), AddActivity.class);
                 startActivity(intent);
                 return true;
