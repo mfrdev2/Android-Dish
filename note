@@ -1,0 +1,24 @@
+ public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "image", null);
+        return Uri.parse(path);
+    }
+
+    //Picker Image Store to Internal storage.
+    private Uri saveImage(Context applicationContext, Bitmap bitmapImg) {
+        ContextWrapper contextWrapper = new ContextWrapper(applicationContext);
+        File dir = contextWrapper.getDir("cacheImages", Context.MODE_PRIVATE);
+        dir = new File(dir, "image" + ".jpg");
+
+        try {
+            OutputStream outputStream = new FileOutputStream(dir);
+            bitmapImg.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Uri.fromFile(dir);
+    }//#END
