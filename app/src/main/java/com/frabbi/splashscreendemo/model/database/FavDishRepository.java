@@ -1,8 +1,6 @@
 package com.frabbi.splashscreendemo.model.database;
 
-import android.content.Context;
 
-import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 
 import com.frabbi.splashscreendemo.model.entities.FavDish;
